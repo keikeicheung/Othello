@@ -22,4 +22,19 @@ public class OthelloGameTest {
         );
     }
 
+    @Test
+    public void shouldStartWithPlayerX() {
+        othelloGame.placeDisc("3d");
+        assertEquals(othelloGame.displayBoard(),
+                "--------\n" +
+                        "--------\n" +
+                        "---X----\n" +
+                        "--------\n" +
+                        "--------\n" +
+                        "--------\n" +
+                        "--------\n" +
+                        "--------"
+        );
+    }
+
 }
