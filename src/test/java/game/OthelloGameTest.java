@@ -23,7 +23,7 @@ public class OthelloGameTest {
     }
 
     @Test
-    public void shouldStartWithPlayerX() {
+    public void shouldStartWithPlayerXAndPlaceDiscWithCoordinate() {
         othelloGame.placeDisc("3d");
         assertEquals(othelloGame.displayBoard(),
                 "--------\n" +
@@ -35,6 +35,11 @@ public class OthelloGameTest {
                         "--------\n" +
                         "--------"
         );
+    }
+
+    @Test(expected = InvalidInputException.class)
+    public void shouldThrowExceptionWhenInputInvalidCoordinate() {
+        othelloGame.placeDisc("invalid-coordinate");
     }
 
 }

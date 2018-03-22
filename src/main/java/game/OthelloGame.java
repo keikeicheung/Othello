@@ -2,12 +2,14 @@ package game;
 
 
 public class OthelloGame {
+    private final int boardSize;
     private final int[][] board;
     private final String xPos = "12345678";
     private final String yPos = "abcdefgh";
     private final String[] players = new String[]{"-", "X", "O"};
 
     public OthelloGame(int boardSize) {
+        this.boardSize = boardSize;
         this.board = new int[boardSize][boardSize];
     }
 
@@ -34,6 +36,9 @@ public class OthelloGame {
             } else {
                 y = yPos.indexOf(positions[i]);
             }
+        }
+        if (x < 0 || x >= boardSize || y < 0 || y >= boardSize) {
+            throw new InvalidInputException();
         }
         board[x][y] = 1;
     }
