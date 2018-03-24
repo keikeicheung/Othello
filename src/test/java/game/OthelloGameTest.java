@@ -133,4 +133,26 @@ public class OthelloGameTest {
         );
     }
 
+
+    @Test
+    public void shouldTurnDiscOnNegativeGradientDiagonalWithOffset() {
+        othelloGame.placeDisc("3d");
+        othelloGame.placeDisc("c5");
+        othelloGame.placeDisc("e7");
+        othelloGame.placeDisc("e6");
+        othelloGame.placeDisc("5f");
+        othelloGame.placeDisc("6c");
+        othelloGame.placeDisc("7c");
+        assertEquals(othelloGame.placeDisc("6f"),
+                "--------\n" +
+                        "--------\n" +
+                        "---X----\n" +
+                        "---XX---\n" +
+                        "--OXXO--\n" +
+                        "--O-XX--\n" +
+                        "--O-----\n" +
+                        "--------"
+        );
+    }
+
 }
