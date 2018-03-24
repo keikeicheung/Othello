@@ -283,5 +283,20 @@ public class OthelloGameTest {
                 "Player 'O' wins ( 39 vs 25 )");
     }
 
+    @Test
+    public void test() {
+        String[] commands = {"d3", "5c", "6d", "7e", "6f", "4f", "4g", "3e", "3c", "5f", "6g", "3f",
+                "2f", "5g", "6e", "2e", "5b", "2d", "4c", "7h", "6c", "5a", "7g", "5h", "3g", "2c", "2b",
+                "1c", "3b", "1g", "1f", "1d", "8e", "8h", "6b", "6a", "7f", "8f", "8g", "6h", "7d", "8d",
+                "4h", "4b", "4a", "2a", "1b", "1a", "7c", "3a", "2g", "1h", "1e", "8c", "7b", "7a", "8b",
+                "8a", "2h", "3h"};
+        for (String command : commands) {
+            othelloGame.placeDisc(command);
+        }
+        assertEquals(othelloGame.nextStep(), "No further moves available\n" +
+                "Player 'O' wins ( 47 vs 17 )");
+    }
+
+
 
 }

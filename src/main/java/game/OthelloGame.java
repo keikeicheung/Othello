@@ -111,7 +111,7 @@ public class OthelloGame {
 
     public String placeDisc(String coordinateStr) {
         Coordinate coordinate = Coordinate.parseCoordinate(coordinateStr);
-        if (coordinate.isValidPositionToPlaceDisc(boardSize) || board[coordinate.getY()][coordinate.getX()] != 0) {
+        if (!coordinate.isValidPositionToPlaceDisc(boardSize) || board[coordinate.getY()][coordinate.getX()] != 0) {
             return "Invalid move. Please try again.";
         }
         List<Coordinate> results = new ArrayList<Coordinate>();
@@ -142,17 +142,11 @@ public class OthelloGame {
             int currentX = updateBoard.getX(x, y, i);
             int currentY = updateBoard.getY(x, y, i);
             Coordinate current = new Coordinate(currentX, currentY);
-            if (current.isValidPositionToPlaceDisc(boardSize)) {
-                break;
-            }
+            boolean currentIsNewlyPlaced = x == currentX && y == currentY;
+            if (!current.isValidPositionToPlaceDisc(boardSize)) break;
             int discOnBoard = board[currentY][currentX];
-            if (hasSeenTheNewlyPlaced && start > -1 && !hasMatched && !Player.isOppositePlayer(discOnBoard, player)) {
-                break;
-            }
-            if (x == currentX && y == currentY) {
-                hasSeenTheNewlyPlaced = true;
-            }
-            if (hasMatched && (discOnBoard == player || (x == currentX && y == currentY)) && hasSeenTheNewlyPlaced) {
+            if (hasSeenTheNewlyPlaced && !hasMatched && !Player.isOppositePlayer(discOnBoard, player)) break;
+            if (hasMatched && ((discOnBoard == player && hasSeenTheNewlyPlaced) || currentIsNewlyPlaced)) {
                 end = i;
                 break;
             }
@@ -160,13 +154,12 @@ public class OthelloGame {
                 start = -1;
                 hasMatched = false;
             }
-            if ((x == currentX && y == currentY) || discOnBoard == player) {
+            if (currentIsNewlyPlaced || discOnBoard == player) {
                 start = i;
                 hasMatched = false;
             }
-            if (Player.isOppositePlayer(discOnBoard, player) && start > -1) {
-                hasMatched = true;
-            }
+            if (Player.isOppositePlayer(discOnBoard, player) && start > -1) hasMatched = true;
+            if (currentIsNewlyPlaced) hasSeenTheNewlyPlaced = true;
 
             if (hasMatched) {
                 results.add(current);
