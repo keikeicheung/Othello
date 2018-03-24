@@ -26,15 +26,15 @@ public class OthelloGame {
 
     public OthelloGame(String boardDisplay) {
         String[] rows = boardDisplay.split("\n");
-        this.boardSize = rows.length;
+        this.boardSize = rows.length - 1;
         this.board = new int[boardSize][boardSize];
-        for (int y = 0; y < rows.length; y++) {
+        for (int y = 0; y < boardSize; y++) {
             char[] charArray = rows[y].toCharArray();
-            for (int x = 0; x < charArray.length; x++) {
+            for (int x = 2; x < charArray.length; x++) {
                 if (charArray[x] == 'X') {
-                    board[y][x] = 1;
+                    board[y][x - 2] = 1;
                 } else if (charArray[x] == 'O') {
-                    board[y][x] = 2;
+                    board[y][x - 2] = 2;
                 }
             }
         }
@@ -44,6 +44,7 @@ public class OthelloGame {
     public String displayBoard() {
         StringBuilder displayResultBuilder = new StringBuilder();
         for (int y = 0; y < board.length; y++) {
+            displayResultBuilder.append(y + 1 + " ");
             for (int x = 0; x < board[y].length; x++) {
                 String playerDisplay = "-";
                 if (board[y][x] > 0) {
@@ -51,10 +52,9 @@ public class OthelloGame {
                 }
                 displayResultBuilder.append(playerDisplay);
             }
-            if (y < board.length - 1) {
-                displayResultBuilder.append("\n");
-            }
+            displayResultBuilder.append("\n");
         }
+        displayResultBuilder.append("  abcdefgh");
         return displayResultBuilder.toString();
     }
 
@@ -132,61 +132,49 @@ public class OthelloGame {
         return displayBoard();
     }
 
-    private List<Coordinate> getCoordinatesToBeUpdated(int x, int y, int player, Board updateBoard) {
+    private List getCoordinatesToBeUpdated(int x, int y, int player, Board updateBoard) {
         int start = -1;
         int end = -1;
         boolean hasMatched = false;
-        boolean hasMatchedWithNewlyPlaced = false;
+        boolean hasSeenTheNewlyPlaced = false;
+        List results = new ArrayList();
         for (int i = 0; i < boardSize; i++) {
             int currentX = updateBoard.getX(x, y, i);
             int currentY = updateBoard.getY(x, y, i);
-            if (currentX < 0 || currentY < 0 || currentX >= boardSize || currentY >= boardSize) {
+            Coordinate current = new Coordinate(currentX, currentY);
+            if (current.isValidPositionToPlaceDisc(boardSize)) {
                 break;
             }
             int discOnBoard = board[currentY][currentX];
-            if (hasMatchedWithNewlyPlaced && start > -1 && !hasMatched && !Player.isOppositePlayer(discOnBoard, player)) {
+            if (hasSeenTheNewlyPlaced && start > -1 && !hasMatched && !Player.isOppositePlayer(discOnBoard, player)) {
                 break;
             }
             if (x == currentX && y == currentY) {
-                hasMatchedWithNewlyPlaced = true;
+                hasSeenTheNewlyPlaced = true;
             }
-            if (discOnBoard == player && (!hasMatchedWithNewlyPlaced)) {
-                start = i;
+            if (hasMatched && (discOnBoard == player || (x == currentX && y == currentY)) && hasSeenTheNewlyPlaced) {
+                end = i;
+                break;
+            }
+            if (discOnBoard == 0) {
+                start = -1;
                 hasMatched = false;
             }
-
-            if (!hasMatched && start > -1 && discOnBoard == 0) {
-                start = -1;
-            }
-            if ((discOnBoard == player || (x == currentX && y == currentY)) && start == -1) {
+            if ((x == currentX && y == currentY) || discOnBoard == player) {
                 start = i;
                 hasMatched = false;
             }
             if (Player.isOppositePlayer(discOnBoard, player) && start > -1) {
                 hasMatched = true;
             }
-            if (hasMatched && (discOnBoard == player || (x == currentX && y == currentY))) {
-                if (hasMatchedWithNewlyPlaced) {
-                    end = i;
-                    break;
-                } else {
-                    start = i;
-                    hasMatched = false;
-                }
 
-            } else if (hasMatched && discOnBoard == 0) {
-                hasMatched = false;
+            if (hasMatched) {
+                results.add(current);
+            } else {
+                results = new ArrayList();
             }
         }
-        List results = new ArrayList();
-        if (hasMatched && start > -1 && end > -1) {
-            for (int i = start + 1; i <= end; i++) {
-                int currentX = updateBoard.getX(x, y, i);
-                int currentY = updateBoard.getY(x, y, i);
-                results.add(new Coordinate(currentX, currentY));
-            }
-        }
-        return results;
+        return (!hasMatched || start < 0 || end < 0) ? new ArrayList() : results;
     }
 
 }
