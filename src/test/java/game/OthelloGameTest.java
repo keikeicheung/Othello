@@ -6,10 +6,20 @@ import static org.junit.Assert.assertEquals;
 
 public class OthelloGameTest {
 
-    private final OthelloGame othelloGame = new OthelloGame(8);
+    private final OthelloGame othelloGame = new OthelloGame(
+            "--------\n" +
+                    "--------\n" +
+                    "--------\n" +
+                    "---OX---\n" +
+                    "---XO---\n" +
+                    "--------\n" +
+                    "--------\n" +
+                    "--------"
+    );
 
     @Test
     public void shouldHave8x8BoardOnGameStart() {
+        OthelloGame othelloGame = new OthelloGame(8);
         assertEquals(othelloGame.displayBoard(),
                 "--------\n" +
                         "--------\n" +
@@ -133,24 +143,49 @@ public class OthelloGameTest {
         );
     }
 
+    @Test
+    public void shouldTurnDiscOnPositiveGradientDiagonalWithOffset() {
+        OthelloGame initialBoard = new OthelloGame(
+                "--------\n" +
+                        "--------\n" +
+                        "----X---\n" +
+                        "---OO---\n" +
+                        "---OO---\n" +
+                        "--------\n" +
+                        "--------\n" +
+                        "--------");
+        assertEquals(initialBoard.placeDisc("5c"),
+                "--------\n" +
+                        "--------\n" +
+                        "----X---\n" +
+                        "---XO---\n" +
+                        "--XOO---\n" +
+                        "--------\n" +
+                        "--------\n" +
+                        "--------"
+        );
+    }
+
 
     @Test
     public void shouldTurnDiscOnNegativeGradientDiagonalWithOffset() {
-        othelloGame.placeDisc("3d");
-        othelloGame.placeDisc("c5");
-        othelloGame.placeDisc("e7");
-        othelloGame.placeDisc("e6");
-        othelloGame.placeDisc("5f");
-        othelloGame.placeDisc("6c");
-        othelloGame.placeDisc("7c");
-        assertEquals(othelloGame.placeDisc("6f"),
+        OthelloGame initialBoard = new OthelloGame(
                 "--------\n" +
                         "--------\n" +
                         "---X----\n" +
-                        "---XX---\n" +
-                        "--OXXO--\n" +
-                        "--O-XX--\n" +
-                        "--O-----\n" +
+                        "---OO---\n" +
+                        "---OO---\n" +
+                        "--------\n" +
+                        "--------\n" +
+                        "--------");
+        assertEquals(initialBoard.placeDisc("5f"),
+                "--------\n" +
+                        "--------\n" +
+                        "---X----\n" +
+                        "---OX---\n" +
+                        "---OOX--\n" +
+                        "--------\n" +
+                        "--------\n" +
                         "--------"
         );
     }

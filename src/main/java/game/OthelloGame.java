@@ -19,6 +19,23 @@ public class OthelloGame {
         board[yPos.indexOf('5')][xPos.indexOf('e')] = 2;
     }
 
+    public OthelloGame(String boardDisplay) {
+        String[] rows = boardDisplay.split("\n");
+        this.boardSize = rows.length;
+        this.board = new int[boardSize][boardSize];
+        for (int y = 0; y < rows.length; y++) {
+            char[] charArray = rows[y].toCharArray();
+            for (int x = 0; x < charArray.length; x++) {
+                if (charArray[x] == 'X') {
+                    board[y][x] = 1;
+                } else if (charArray[x] == 'O') {
+                    board[y][x] = 2;
+                }
+            }
+        }
+
+    }
+
     public String displayBoard() {
         StringBuilder displayResultBuilder = new StringBuilder();
         for (int y = 0; y < board.length; y++) {
@@ -48,20 +65,33 @@ public class OthelloGame {
                 y = yPos.indexOf(positions[i]);
             }
         }
-        if (x < 0 || x >= boardSize || y < 0 || y >= boardSize) {
+        if (x < 0 || x >= boardSize || y < 0 || y >= boardSize || board[y][x] != 0) {
             return "Invalid move. Please try again.";
         }
-        boolean verticalValid = isValidMove(x, y, currentPlayerIndex + 1, new VerticalColumnBoard());
-        boolean horizontalValid = isValidMove(x, y, currentPlayerIndex + 1, new HorizontalRowBoard());
-        boolean positiveDiagonalValid = isValidMove(x, y, currentPlayerIndex + 1, new PositiveDiagonalBoard(boardSize));
-        boolean negativeDiagonalValid = isValidMove(x, y, currentPlayerIndex + 1, new NegativeDiagonalBoard());
+        VerticalColumnBoard verticalBoard = new VerticalColumnBoard();
+        HorizontalRowBoard horizontalBoard = new HorizontalRowBoard();
+        PositiveDiagonalBoard positiveDiagonalBoard = new PositiveDiagonalBoard(boardSize);
+        NegativeDiagonalBoard negativeDiagonalBoard = new NegativeDiagonalBoard();
+        boolean verticalValid = isValidMove(x, y, currentPlayerIndex + 1, verticalBoard);
+        boolean horizontalValid = isValidMove(x, y, currentPlayerIndex + 1, horizontalBoard);
+        boolean positiveDiagonalValid = isValidMove(x, y, currentPlayerIndex + 1, positiveDiagonalBoard);
+        boolean negativeDiagonalValid = isValidMove(x, y, currentPlayerIndex + 1, negativeDiagonalBoard);
         if (!verticalValid && !horizontalValid && !positiveDiagonalValid && !negativeDiagonalValid) {
             return "Invalid move. Please try again.";
         }
         board[y][x] = currentPlayerIndex + 1;
-
-        updateDisc(x, y, currentPlayerIndex + 1);
-
+        if (verticalValid) {
+            updateDisc(x, y, currentPlayerIndex + 1, verticalBoard);
+        }
+        if (horizontalValid) {
+            updateDisc(x, y, currentPlayerIndex + 1, horizontalBoard);
+        }
+        if (positiveDiagonalValid) {
+            updateDisc(x, y, currentPlayerIndex + 1, positiveDiagonalBoard);
+        }
+        if (negativeDiagonalValid) {
+            updateDisc(x, y, currentPlayerIndex + 1, negativeDiagonalBoard);
+        }
         currentPlayerIndex += 1;
         if (currentPlayerIndex >= players.length) {
             currentPlayerIndex = 0;
@@ -69,11 +99,8 @@ public class OthelloGame {
         return displayBoard();
     }
 
-    private void updateDisc(int x, int y, int player) {
-        updateBoard(x, y, player, new VerticalColumnBoard());
-        updateBoard(x, y, player, new HorizontalRowBoard());
-        updateBoard(x, y, player, new PositiveDiagonalBoard(boardSize));
-        updateBoard(x, y, player, new NegativeDiagonalBoard());
+    private void updateDisc(int x, int y, int player, Board board) {
+        updateBoard(x, y, player, board);
     }
 
     private void updateBoard(int x, int y, int player, Board updateBoard) {
@@ -83,7 +110,7 @@ public class OthelloGame {
         for (int i = 0; i < boardSize; i++) {
             int currentX = updateBoard.getX(x, y, i);
             int currentY = updateBoard.getY(x, y, i);
-            if (currentX >= boardSize || currentY >= boardSize) {
+            if (currentX < 0 || currentY < 0 || currentX >= boardSize || currentY >= boardSize) {
                 break;
             }
             if (updateBoard.getPlayer(board, x, y, i) == player && start == -1) {
@@ -92,8 +119,11 @@ public class OthelloGame {
             if (isOppositePlayer(updateBoard.getPlayer(board, x, y, i), player) && start > -1) {
                 hasMatched = true;
             }
-            if (hasMatched && end == -1) {
+            if (hasMatched) {
                 end = i;
+                break;
+            } else if (hasMatched && updateBoard.getPlayer(board, x, y, i) == 0) {
+                hasMatched = false;
             }
         }
         if (hasMatched) {
@@ -110,7 +140,7 @@ public class OthelloGame {
         for (int i = 0; i < boardSize; i++) {
             int currentX = checkBoard.getX(x, y, i);
             int currentY = checkBoard.getY(x, y, i);
-            if (currentX >= boardSize || currentY >= boardSize) {
+            if (currentX < 0 || currentY < 0 || currentX >= boardSize || currentY >= boardSize) {
                 break;
             }
             if ((checkBoard.getPlayer(board, x, y, i) == player || (x == currentX && y == currentY)) && start == -1) {
