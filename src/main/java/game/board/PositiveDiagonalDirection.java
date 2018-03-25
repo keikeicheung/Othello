@@ -1,7 +1,7 @@
 package game.board;
 
 
-public class PositiveDiagonalDirection implements direction {
+public class PositiveDiagonalDirection implements Direction {
 
     private int boardSize;
 

@@ -10,7 +10,7 @@ import java.util.List;
 public class OthelloGame {
     private final int boardSize = 8;
     private final int[][] board = new int[boardSize][boardSize];
-    private final List<direction> directions = Arrays.asList(new VerticalColumnDirection(), new HorizontalRowDirection(), new PositiveDiagonalDirection(boardSize), new NegativeDiagonalDirection());
+    private final List<Direction> directions = Arrays.asList(new VerticalColumnDirection(), new HorizontalRowDirection(), new PositiveDiagonalDirection(boardSize), new NegativeDiagonalDirection());
     private final Score score = new Score(board);
     private int currentPlayerIndex = 0;
 
@@ -98,7 +98,7 @@ public class OthelloGame {
             return "Invalid move. Please try again.";
         }
         List<Coordinate> results = new ArrayList<Coordinate>();
-        for (direction direction : directions) {
+        for (Direction direction : directions) {
             results.addAll(getCoordinatesToBeUpdated(coordinate.getX(), coordinate.getY(), currentPlayerIndex + 1, direction));
         }
         if (results.size() == 0) {
@@ -115,7 +115,7 @@ public class OthelloGame {
         return displayBoard();
     }
 
-    private List getCoordinatesToBeUpdated(int x, int y, int player, direction updateDirection) {
+    private List getCoordinatesToBeUpdated(int x, int y, int player, Direction updateDirection) {
         int start = -1;
         int end = -1;
         boolean hasMatched = false;

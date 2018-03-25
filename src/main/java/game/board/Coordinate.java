@@ -12,7 +12,7 @@ public class Coordinate {
     }
 
     public static Coordinate parseCoordinate(String coordinateStr) {
-        char[] positions = coordinateStr.toCharArray();
+        char[] positions = coordinateStr.toLowerCase().toCharArray();
         int x = -1;
         int y = -1;
         for (int i = 0; i < positions.length; i++) {

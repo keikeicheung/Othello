@@ -38,6 +38,21 @@ public class OthelloGameTest {
         );
     }
 
+
+    @Test
+    public void shouldAcceptCaseInsensitiveCommand() {
+        assertEquals(othelloGame.placeDisc("3D"),
+                "1 --------\n" +
+                        "2 --------\n" +
+                        "3 ---X----\n" +
+                        "4 ---XX---\n" +
+                        "5 ---XO---\n" +
+                        "6 --------\n" +
+                        "7 --------\n" +
+                        "8 --------\n" +
+                        "  abcdefgh"
+        );
+    }
     @Test
     public void shouldPlaceDiscWithPlayerOAfterXThatTurnsAllHorizontalAsPlayerO() {
         othelloGame.placeDisc("3d");
