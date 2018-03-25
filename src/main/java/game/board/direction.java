@@ -1,6 +1,6 @@
 package game.board;
 
-public interface Board {
+public interface direction {
 
     int getX(int x, int y, int i);
 

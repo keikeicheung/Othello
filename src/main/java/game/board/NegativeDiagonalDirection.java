@@ -1,7 +1,7 @@
 package game.board;
 
 
-public class NegativeDiagonalBoard implements Board {
+public class NegativeDiagonalDirection implements direction {
 
     public int getX(int x, int y, int i) {
         if (x > y) {

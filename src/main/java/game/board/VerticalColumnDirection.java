@@ -1,13 +1,12 @@
 package game.board;
 
-
-public class HorizontalRowBoard implements Board {
+public class VerticalColumnDirection implements direction {
 
     public int getX(int x, int y, int i) {
-        return i;
+        return x;
     }
 
     public int getY(int x, int y, int i) {
-        return y;
+        return i;
     }
 }

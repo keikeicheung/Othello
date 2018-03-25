@@ -10,7 +10,7 @@ import java.util.List;
 public class OthelloGame {
     private final int boardSize = 8;
     private final int[][] board = new int[boardSize][boardSize];
-    private final List<Board> boards = Arrays.asList(new VerticalColumnBoard(), new HorizontalRowBoard(), new PositiveDiagonalBoard(boardSize), new NegativeDiagonalBoard());
+    private final List<direction> directions = Arrays.asList(new VerticalColumnDirection(), new HorizontalRowDirection(), new PositiveDiagonalDirection(boardSize), new NegativeDiagonalDirection());
     private final Score score = new Score(board);
     private int currentPlayerIndex = 0;
 
@@ -98,8 +98,8 @@ public class OthelloGame {
             return "Invalid move. Please try again.";
         }
         List<Coordinate> results = new ArrayList<Coordinate>();
-        for (Board board : boards) {
-            results.addAll(getCoordinatesToBeUpdated(coordinate.getX(), coordinate.getY(), currentPlayerIndex + 1, board));
+        for (direction direction : directions) {
+            results.addAll(getCoordinatesToBeUpdated(coordinate.getX(), coordinate.getY(), currentPlayerIndex + 1, direction));
         }
         if (results.size() == 0) {
             return "Invalid move. Please try again.";
@@ -115,15 +115,15 @@ public class OthelloGame {
         return displayBoard();
     }
 
-    private List getCoordinatesToBeUpdated(int x, int y, int player, Board updateBoard) {
+    private List getCoordinatesToBeUpdated(int x, int y, int player, direction updateDirection) {
         int start = -1;
         int end = -1;
         boolean hasMatched = false;
         boolean hasSeenTheNewlyPlaced = false;
         List results = new ArrayList();
         for (int i = 0; i < boardSize; i++) {
-            int currentX = updateBoard.getX(x, y, i);
-            int currentY = updateBoard.getY(x, y, i);
+            int currentX = updateDirection.getX(x, y, i);
+            int currentY = updateDirection.getY(x, y, i);
             Coordinate current = new Coordinate(currentX, currentY);
             boolean currentIsNewlyPlaced = x == currentX && y == currentY;
             if (!current.isValidPositionToPlaceDisc(boardSize)) break;
