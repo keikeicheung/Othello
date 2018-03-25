@@ -8,11 +8,12 @@ import java.util.List;
 
 
 public class OthelloGame {
-    private final int boardSize;
-    private final int[][] board;
-    private final List<Board> boards;
+    private int boardSize;
+    private int[][] board;
+    private List<Board> boards;
 
     private int currentPlayerIndex = 0;
+    private Score score;
 
     public OthelloGame(int boardSize) {
         this.boardSize = boardSize;
@@ -22,6 +23,7 @@ public class OthelloGame {
         board[4][3] = 1;
         board[4][4] = 2;
         boards = Arrays.asList(new VerticalColumnBoard(), new HorizontalRowBoard(), new PositiveDiagonalBoard(boardSize), new NegativeDiagonalBoard());
+        score = new Score(board);
     }
 
     public OthelloGame(String boardDisplay) {
@@ -39,6 +41,7 @@ public class OthelloGame {
             }
         }
         boards = Arrays.asList(new VerticalColumnBoard(), new HorizontalRowBoard(), new PositiveDiagonalBoard(boardSize), new NegativeDiagonalBoard());
+        score = new Score(board);
     }
 
     public String displayBoard() {
@@ -67,25 +70,13 @@ public class OthelloGame {
     }
 
     private String getResultSummary() {
-        int playerXScore = 0;
-        int playerOScore = 0;
-        for (int y = 0; y < board.length; y++) {
-            int[] row = board[y];
-            for (int x = 0; x < row.length; x++) {
-                Player player = Player.getPlayerByIntValue(row[x]);
-                if (player == Player.X) {
-                    playerXScore += 1;
-                } else if (player == Player.O) {
-                    playerOScore += 1;
-                }
-            }
-        }
-        if (playerXScore > playerOScore) {
-            return "Player 'X' wins ( " + playerXScore + " vs " + playerOScore + " )";
-        } else if (playerOScore > playerXScore) {
-            return "Player 'O' wins ( " + playerOScore + " vs " + playerXScore + " )";
+        score.calculateScore();
+        if (score.getPlayerXScore() > score.getPlayerOScore()) {
+            return "Player 'X' wins ( " + score.getPlayerXScore() + " vs " + score.getPlayerOScore() + " )";
+        } else if (score.getPlayerOScore() > score.getPlayerXScore()) {
+            return "Player 'O' wins ( " + score.getPlayerOScore() + " vs " + score.getPlayerXScore() + " )";
         } else {
-            return "No player wins ( " + playerXScore + " vs " + playerOScore + " )";
+            return "No player wins ( " + score.getPlayerXScore() + " vs " + score.getPlayerOScore() + " )";
         }
 
     }
