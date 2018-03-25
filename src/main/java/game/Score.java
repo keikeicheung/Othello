@@ -23,9 +23,9 @@ public class Score {
             for (int x = 0; x < row.length; x++) {
                 Player player = Player.getPlayerByIntValue(row[x]);
                 if (player == Player.X) {
-                    playerXScore += 1;
+                    playerXScore++;
                 } else if (player == Player.O) {
-                    playerOScore += 1;
+                    playerOScore++;
                 }
             }
         }

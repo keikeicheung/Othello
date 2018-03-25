@@ -8,28 +8,22 @@ import java.util.List;
 
 
 public class OthelloGame {
-    private int boardSize;
-    private int[][] board;
-    private List<Board> boards;
-
+    private final int boardSize = 8;
+    private final int[][] board = new int[boardSize][boardSize];
+    private final List<Board> boards = Arrays.asList(new VerticalColumnBoard(), new HorizontalRowBoard(), new PositiveDiagonalBoard(boardSize), new NegativeDiagonalBoard());
+    private final Score score = new Score(board);
     private int currentPlayerIndex = 0;
-    private Score score;
 
-    public OthelloGame(int boardSize) {
-        this.boardSize = boardSize;
-        this.board = new int[boardSize][boardSize];
+    public OthelloGame() {
         board[3][3] = 2;
         board[3][4] = 1;
         board[4][3] = 1;
         board[4][4] = 2;
-        boards = Arrays.asList(new VerticalColumnBoard(), new HorizontalRowBoard(), new PositiveDiagonalBoard(boardSize), new NegativeDiagonalBoard());
-        score = new Score(board);
     }
 
     public OthelloGame(String boardDisplay) {
+        this();
         String[] rows = boardDisplay.split("\n");
-        this.boardSize = rows.length - 1;
-        this.board = new int[boardSize][boardSize];
         for (int y = 0; y < boardSize; y++) {
             char[] charArray = rows[y].toCharArray();
             for (int x = 2; x < charArray.length; x++) {
@@ -40,8 +34,6 @@ public class OthelloGame {
                 }
             }
         }
-        boards = Arrays.asList(new VerticalColumnBoard(), new HorizontalRowBoard(), new PositiveDiagonalBoard(boardSize), new NegativeDiagonalBoard());
-        score = new Score(board);
     }
 
     public String displayBoard() {

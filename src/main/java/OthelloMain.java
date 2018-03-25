@@ -8,7 +8,7 @@ public class OthelloMain {
     public static void main(String[] args) {
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         System.out.println("*** Start Othello Game ***");
-        OthelloGame othelloGame = new OthelloGame(8);
+        OthelloGame othelloGame = new OthelloGame();
         String input = "";
         System.out.println(othelloGame.displayBoard());
         try {

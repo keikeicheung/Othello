@@ -6,21 +6,10 @@ import static org.junit.Assert.assertEquals;
 
 public class OthelloGameTest {
 
-    private final OthelloGame othelloGame = new OthelloGame(
-            "1 --------\n" +
-                    "2 --------\n" +
-                    "3 --------\n" +
-                    "4 ---OX---\n" +
-                    "5 ---XO---\n" +
-                    "6 --------\n" +
-                    "7 --------\n" +
-                    "8 --------\n" +
-                    "  abcdefgh"
-    );
+    private final OthelloGame othelloGame = new OthelloGame();
 
     @Test
     public void shouldHave8x8BoardOnGameStart() {
-//        OthelloGame othelloGame = new OthelloGame(8);
         assertEquals(othelloGame.displayBoard(),
                 "1 --------\n" +
                         "2 --------\n" +
